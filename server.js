@@ -18,10 +18,11 @@ let leaderboard = [
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 
-app.use(express.static('public')); // Serve static files from 'public' directory
-
 // Render the leaderboard page
 app.get('/leaderboard', (req, res) => {
+    res.render('leaderboard');
+});
+app.get('/', (req, res) => {
     res.render('leaderboard');
 });
 

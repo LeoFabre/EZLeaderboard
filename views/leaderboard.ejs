@@ -1,16 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<link href="/stylesheets/style.css" rel="stylesheet">
 <head>
     <meta charset="UTF-8">
     <title>Leaderboard</title>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/leaderboard.js"></script>
+    <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
-<body>
-<h1>Leaderboard</h1>
-<ul id="leaderboard">
-    <!-- Leaderboard entries will be populated here -->
-</ul>
-<script src="/js/leaderboard.js"></script>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+<nav class="bg-gray-800 p-4">
+    <div class="container mx-auto">
+        <h1 class="text-white text-3xl font-semibold">Leaderboard</h1>
+    </div>
+</nav>
+
+<div class="container mx-auto mt-8">
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h2 class="text-2xl font-bold mb-2 text-gray-800">Current Standings</h2>
+        <ul id="leaderboard" class="list-reset">
+            <!-- Leaderboard entries will be populated by the JavaScript -->
+        </ul>
+    </div>
+</div>
+
 </body>
 </html>

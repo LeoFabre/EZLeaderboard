@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<link href="/stylesheets/style.css" rel="stylesheet">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
@@ -8,10 +7,43 @@
     <script src="/js/dashboard.js" defer></script>
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
-<body>
-<h1>Dashboard</h1>
-<ul id="leaderboard">
-    <!-- Leaderboard entries will be populated here -->
-</ul>
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+
+<nav class="bg-gray-800 p-4">
+    <div class="container mx-auto">
+        <h1 class="text-white text-3xl font-semibold">Dashboard</h1>
+    </div>
+</nav>
+
+<div class="container mx-auto mt-8">
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h2 class="text-2xl font-bold mb-2 text-gray-800">Edit Leaderboard</h2>
+        <!-- Header Row -->
+        <div class="grid grid-cols-3 gap-4 p-4 font-bold text-gray-600">
+            <div>Position</div>
+            <div>Player Name</div>
+            <div>Score</div>
+        </div>
+        <ul id="leaderboard" class="list-reset">
+            <!-- Leaderboard entries will be dynamically inserted here -->
+        </ul>
+    </div>
+
+    <!-- Add New Entry Form -->
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h3 class="text-xl font-bold mb-4 text-gray-800">Add New Entry</h3>
+        <form id="new-entry-form" class="flex flex-col space-y-4">
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   type="text" placeholder="Player name" id="new-player-name">
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                   type="number" placeholder="Score" id="new-player-score" step="0.01">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit">Add</button>
+        </form>
+    </div>
+
+</div>
+
+
 </body>
 </html>
