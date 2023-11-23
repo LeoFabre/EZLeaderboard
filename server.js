@@ -10,7 +10,9 @@ const io = socketIo(server);
 let leaderboard = [
     { player: 'Alice', score: 5000 },
     { player: 'Bob', score: 4500 },
-    { player: 'Charlie', score: 4000 }
+    { player: 'Charlie', score: 4000 },
+    { player: 'Donald', score: 3600 },
+    { player: 'Enzo', score: 3000 }
     // ... more entries
 ];
 
