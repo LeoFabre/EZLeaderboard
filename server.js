@@ -6,16 +6,25 @@ const path = require('path');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+const fs = require('fs');
 
-let leaderboard = [
-    { player: 'Alice', score: 5000 },
-    { player: 'Bob', score: 4500 },
-    { player: 'Charlie', score: 4000 },
-    { player: 'Donald', score: 3600 },
-    { player: 'Enzo', score: 3000 }
-    // ... more entries
-];
 
+function FillLeaderboardWithDummyData(){
+    leaderboard = [
+        { player: 'Alice', score: 5000 },
+        { player: 'Bob', score: 4500 },
+        { player: 'Charlie', score: 4000 },
+        { player: 'Donald', score: 3600 },
+        { player: 'Enzo', score: 3000 }
+        // ... more entries
+    ];
+}
+
+let leaderboard = [];
+
+FillLeaderboardWithDummyData();
+
+// Server routes setup
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
@@ -33,6 +42,7 @@ app.get('/dashboard', (req, res) => {
     res.render('dashboard');
 });
 
+//event handling
 io.on('connection', (socket) => {
     console.log('New client connected');
 
@@ -44,6 +54,7 @@ io.on('connection', (socket) => {
         leaderboard.push(entry);
         leaderboard.sort((a, b) => b.score - a.score); // Optional: sort the leaderboard by score
         io.emit('update-leaderboard', leaderboard); // Broadcast the updated leaderboard
+        saveLeaderboard(); // Call this after you modify the leaderboard array
     });
 
     // Listen for a 'delete-entry' message from this client
@@ -51,6 +62,7 @@ io.on('connection', (socket) => {
         if (index >= 0 && index < leaderboard.length) {
             leaderboard.splice(index, 1);
             io.emit('update-leaderboard', leaderboard); // Broadcast the updated leaderboard
+            saveLeaderboard(); // Call this after you modify the leaderboard array
         }
     });
 
@@ -65,6 +77,8 @@ io.on('connection', (socket) => {
             leaderboard.sort((a, b) => b.score - a.score);
             // Emit the updated leaderboard to all clients
             io.emit('update-leaderboard', leaderboard);
+            saveLeaderboard(); // Call this after you modify the leaderboard array
+
         }
     });
 
@@ -77,3 +91,47 @@ io.on('connection', (socket) => {
 server.listen(3000, () => {
     console.log('Leaderboard Server is running on port 3000');
 });
+
+//region load/save to file
+function loadLeaderboard() {
+    try {
+        const data = fs.readFileSync('./savedData.json', 'utf8');
+        leaderboard = JSON.parse(data);
+    } catch (err) {
+        console.log('No existing data found, starting with an empty leaderboard');
+        leaderboard = []; // If there's no file or a parsing error, start with an empty array
+    }
+}
+function saveLeaderboard() {
+    fs.writeFileSync('./savedData.json', JSON.stringify(leaderboard, null, 2), 'utf8');
+}
+// Load the leaderboard data from the file
+loadLeaderboard();
+//endregion
+
+//region periodic backup in a backup folder
+
+const backupInterval = 120000; // 2 minutes in milliseconds
+function ensureBackupDirExists() {
+    const backupsDir = './backups';
+    if (!fs.existsSync(backupsDir)){
+        fs.mkdirSync(backupsDir, { recursive: true });
+    }
+}
+
+function backupLeaderboard() {
+    const timestamp = new Date().toISOString().replace(/:/g, '-'); // Replace colons for filesystem compatibility
+    const backupFilePath = `./backups/leaderboard-backup-${timestamp}.json`;
+    fs.writeFileSync(backupFilePath, JSON.stringify(leaderboard, null, 2), 'utf8');
+    console.log(`Backup saved at ${backupFilePath}`);
+}
+
+// Ensure backup directory exists on startup
+ensureBackupDirExists();
+
+// Set an interval to back up the leaderboard every 2 minutes
+setInterval(() => {
+    ensureBackupDirExists(); // Check if directory exists before backup
+    backupLeaderboard();
+}, backupInterval);
+//endregion
