@@ -88,6 +88,27 @@ io.on('connection', (socket) => {
     });
 });
 
+// POST route to add a new entry
+app.post('/AddEntry', (req, res) => {
+    const { playername, score } = req.body;
+    if (!playername || isNaN(parseFloat(score))) {
+        return res.status(400).send('Invalid player name or score.');
+    }
+
+    // Create a new entry object
+    const newEntry = { player: playername, score: parseFloat(score) };
+
+    // Add to the leaderboard and sort
+    leaderboard.push(newEntry);
+    leaderboard.sort((a, b) => b.score - a.score);
+
+    // Save the updated leaderboard to the JSON file
+    saveLeaderboard();
+
+    // Send back a response
+    res.status(200).send('New entry added successfully.');
+});
+
 server.listen(3000, () => {
     console.log('Leaderboard Server is running on port 3000');
 });
