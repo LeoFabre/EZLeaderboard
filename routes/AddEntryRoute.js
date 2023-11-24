@@ -15,7 +15,7 @@ module.exports = function(leaderboard, io) {
 
         // Add to the leaderboard and sort
         leaderboard.push(newEntry);
-        leaderboard.sort((a, b) => b.score - a.score);
+        leaderboard.sort((a, b) => a.score - b.score);
 
         // Save the updated leaderboard to the JSON file
         loadSave.saveLeaderboard(leaderboard);

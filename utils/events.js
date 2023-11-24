@@ -7,7 +7,7 @@ function OnReceivedAddEntry(entry, leaderboard, io) {
     }
 
     leaderboard.push(entry);
-    leaderboard.sort((a, b) => b.score - a.score);
+    leaderboard.sort((a, b) => a.score - b.score);
     io.emit('update-leaderboard', leaderboard);
     try {
         loadSave.saveLeaderboard(leaderboard);
@@ -34,7 +34,7 @@ function OnReceivedUpdateEntry(data, leaderboard, io) {
     const { index, player, score } = data;
     if (index >= 0 && index < leaderboard.length && player && !isNaN(parseFloat(score))) {
         leaderboard[index] = { player, score };
-        leaderboard.sort((a, b) => b.score - a.score);
+        leaderboard.sort((a, b) => a.score - b.score);
         io.emit('update-leaderboard', leaderboard);
         try {
             loadSave.saveLeaderboard(leaderboard);
